@@ -1,0 +1,49 @@
+{
+  "units": [
+    {
+      "id": "1",
+      "unit": 1,
+      "title": "Life",
+      "lessons": [
+        {
+          "id": "1.1",
+          "lesson": 1,
+          "title": "Free time",
+          "grammar": "Questions in Pres Simple + Past Simple",
+          "vocabulary": [
+            { "en": "to go on holiday", "ru": "ехать в отпуск" },
+            { "en": "to go shopping", "ru": "ходить по магазинам" },
+            { "en": "to go for a walk", "ru": "ходить погулять" },
+            { "en": "to spend time alone", "ru": "проводить время в одиночестве" },
+            { "en": "to spend time with sb", "ru": "проводить время с кем-то" },
+            { "en": "to spend money", "ru": "тратить деньги" },
+            { "en": "to eat / go out", "ru": "есть / выходить куда-то" },
+            { "en": "to have barbecue", "ru": "готовить барбекю" },
+            { "en": "to have time off", "ru": "иметь свободное время" },
+            { "en": "to have a party", "ru": "устраивать вечеринку" },
+            { "en": "to play musical instrument", "ru": "играть на музыкальном инструменте" },
+            { "en": "to play (a) sport", "ru": "заниматься спортом" },
+            { "en": "to play games", "ru": "играть в игры" },
+            { "en": "to do exercise", "ru": "делать физич. упражнения" },
+            { "en": "to be curious", "ru": "быть любопытным" },
+            { "en": "to be good at sth / doing sth", "ru": "хорошо разбираться в чём-то / делать что-то" },
+            { "en": "to be interested in sth", "ru": "интересоваться чем-то" },
+            { "en": "to enjoy sth/doing sth", "ru": "получать удовольствие от чего-то / делать что-то" }
+          ],
+          "prompts": [
+            "what you are interested in",
+            "what you do at your free time",
+            "Do you go out or stay in?",
+            "what your parents do",
+            "what men, women like doing",
+            "what young/elderly people, children like doing"
+          ],
+          "adverbs": ["usually", "sometimes", "often", "never"]
+        }
+      ],
+      "games": [
+        { "id": "flashcards", "type": "2d", "titleEn": "Flashcards", "titleRu": "Карточки" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --game-bg: 250 249 246;
+  --game-primary: 99 102 241;
+  --game-success: 34 197 94;
+  --game-accent: 251 146 60;
+  --game-card: 255 255 255;
+  --game-shadow: 0 4px 14px 0 rgb(0 0 0 / 0.06);
+  --game-radius: 1rem;
+}
+
+@layer base {
+  body {
+    background: linear-gradient(160deg, rgb(254 252 250) 0%, rgb(243 232 255 / 0.3) 50%, rgb(224 242 254 / 0.4) 100%);
+    min-height: 100vh;
+  }
+}
+
+/* Confetti burst animation */
+@keyframes confetti-fly {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx), var(--ty)) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.animate-confetti {
+  animation: confetti-fly 1.8s ease-out forwards;
+  pointer-events: none;
+}
