@@ -1,15 +1,15 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { LabelWithRu } from "@/components/ui/LabelWithRu";
+import { RuSpoiler } from "@/components/ui/RuSpoiler";
 import type { IrregularVerb } from "@/data/irregularVerbsTable1";
 import { irregularVerbsTable1 } from "@/data/irregularVerbsTable1";
 
 type CollectionId = "table1" | "table2";
 
-const COLLECTIONS: { id: CollectionId; labelEn: string; labelRu: string; verbs: IrregularVerb[] }[] = [
-  { id: "table1", labelEn: "Collection table 1", labelRu: "Коллекция таблицы 1", verbs: irregularVerbsTable1 },
-  { id: "table2", labelEn: "Collection table 2", labelRu: "Коллекция таблицы 2", verbs: [] },
+const COLLECTIONS: { id: CollectionId; label: string; verbs: IrregularVerb[] }[] = [
+  { id: "table1", label: "Table One", verbs: irregularVerbsTable1 },
+  { id: "table2", label: "Table Two", verbs: [] },
 ];
 
 function normalizeForSearch(s: string): string {
@@ -72,55 +72,37 @@ export function IrregularVerbsFlashcards() {
   return (
     <section className="mb-10">
       <div className="bg-white/80 backdrop-blur rounded-2xl border border-white/50 shadow-lg overflow-hidden">
-        <div className="px-5 py-3 bg-emerald-500/10 border-b border-emerald-200/30">
-          <LabelWithRu
-            en="Irregular verbs — flip cards"
-            ru="Неправильные глаголы — переворачивающиеся карточки"
-            as="h2"
-            className="text-xl font-semibold text-slate-800"
-          />
-          <p className="text-sm text-slate-600 mt-1">
-            <span>First form (V1) → answer with Past simple (V2) and Past participle (V3).</span>
-            <span className="block text-xs text-gray-500 mt-0.5">Даётся первая форма — назовите вторую и третью.</span>
-          </p>
-        </div>
-
         <div className="p-4 space-y-4">
           {/* Collection selector */}
-          <div>
-            <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">
-              Collection / Коллекция
-            </span>
-            <div className="flex flex-wrap gap-2 mt-1.5">
-              {COLLECTIONS.map((c) => (
-                <button
-                  key={c.id}
-                  type="button"
-                  onClick={() => {
-                    setCollectionId(c.id);
-                    setIndex(0);
-                    setShowBack(false);
-                    setShowTranslation(false);
-                  }}
-                  disabled={c.verbs.length === 0}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition ${
-                    collectionId === c.id
-                      ? "bg-emerald-500 text-white shadow-sm"
-                      : c.verbs.length
-                        ? "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                        : "bg-slate-50 text-slate-400 cursor-not-allowed"
-                  }`}
-                >
-                  {c.labelRu}
-                </button>
-              ))}
-            </div>
+          <div className="flex flex-wrap gap-2">
+            {COLLECTIONS.map((c) => (
+              <button
+                key={c.id}
+                type="button"
+                onClick={() => {
+                  setCollectionId(c.id);
+                  setIndex(0);
+                  setShowBack(false);
+                  setShowTranslation(false);
+                }}
+                disabled={c.verbs.length === 0}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition ${
+                  collectionId === c.id
+                    ? "bg-emerald-500 text-white shadow-sm"
+                    : c.verbs.length
+                      ? "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                      : "bg-slate-50 text-slate-400 cursor-not-allowed"
+                }`}
+              >
+                {c.label}
+              </button>
+            ))}
           </div>
 
           {/* Quick search */}
           <div>
             <label htmlFor="verb-search" className="text-xs font-medium text-slate-500 uppercase tracking-wide">
-              Search / Поиск (English or Russian)
+              Search / <RuSpoiler>Поиск</RuSpoiler> (English or Russian)
             </label>
             <input
               id="verb-search"
@@ -140,8 +122,8 @@ export function IrregularVerbsFlashcards() {
           {!hasCards && (
             <p className="text-sm text-slate-500 py-4">
               {search
-                ? "No verbs match the search. / По вашему запросу ничего не найдено."
-                : "This collection is empty. / В этой коллекции пока нет глаголов."}
+                ? <>No verbs match the search. / <RuSpoiler>По вашему запросу ничего не найдено.</RuSpoiler></>
+                : <>This collection is empty. / <RuSpoiler>В этой коллекции пока нет глаголов.</RuSpoiler></>}
             </p>
           )}
 
@@ -184,17 +166,17 @@ export function IrregularVerbsFlashcards() {
                         <p className="text-sm text-slate-500 mt-2">
                           Name Past simple (V2) and Past participle (V3). Flip to check.
                         </p>
-                        <p className="text-xs text-gray-500 mt-0.5">Назовите вторую и третью форму. Переверните, чтобы проверить.</p>
+                        <p className="text-xs text-gray-500 mt-0.5"><RuSpoiler>Назовите вторую и третью форму. Переверните, чтобы проверить.</RuSpoiler></p>
                         <div className="mt-4">
                           <button
                             type="button"
                             onClick={handleShowTranslation}
                             className="px-4 py-2 rounded-xl bg-amber-100 text-amber-800 hover:bg-amber-200 font-medium text-sm transition"
                           >
-                            Показать перевод
+                            <RuSpoiler>Показать перевод</RuSpoiler>
                           </button>
                           {showTranslation && (
-                            <p className="mt-2 text-slate-600 font-medium">{current.ru}</p>
+                            <p className="mt-2 text-slate-600 font-medium"><RuSpoiler>{current.ru}</RuSpoiler></p>
                           )}
                         </div>
                       </>
@@ -206,8 +188,8 @@ export function IrregularVerbsFlashcards() {
                         <p className="text-xl text-emerald-700 font-bold mt-0.5">{current.v3}</p>
                         {showTranslation && (
                           <p className="text-slate-600 mt-4 pt-3 border-t border-slate-100">
-                            <span className="text-slate-500">Перевод: </span>
-                            {current.ru}
+                            <span className="text-slate-500"><RuSpoiler>Перевод: </RuSpoiler></span>
+                            <RuSpoiler>{current.ru}</RuSpoiler>
                           </p>
                         )}
                         <p className="text-xs text-slate-400 mt-4">Tap to flip back</p>

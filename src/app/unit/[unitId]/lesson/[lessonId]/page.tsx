@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getUnit, getLesson } from "@/lib/data";
 import { LabelWithRu } from "@/components/ui/LabelWithRu";
+import { RuSpoiler } from "@/components/ui/RuSpoiler";
 
 interface Props {
   params: Promise<{ unitId: string; lessonId: string }>;
@@ -17,7 +18,7 @@ export default async function LessonPage({ params }: Props) {
     <main className="max-w-2xl mx-auto p-6">
       <Link href="/" className="inline-block text-sm text-indigo-600 hover:text-indigo-800 mb-6 font-medium">
         <span>← Back to units</span>
-        <span className="block text-xs text-gray-500 mt-0.5">Назад к юнитам</span>
+        <RuSpoiler className="block text-xs text-gray-500 mt-0.5">Назад к юнитам</RuSpoiler>
       </Link>
       <div className="mb-6">
         <LabelWithRu
@@ -28,12 +29,12 @@ export default async function LessonPage({ params }: Props) {
         />
         <p className="text-sm text-slate-600">
           <span>Choose a game (3–5 min)</span>
-          <span className="block text-xs text-gray-500 mt-0.5">Выберите игру (3–5 мин)</span>
+          <RuSpoiler className="block text-xs text-gray-500 mt-0.5">Выберите игру (3–5 мин)</RuSpoiler>
         </p>
       </div>
       <h2 className="text-lg font-bold text-slate-800 mb-3">
         <span>Games</span>
-        <span className="block text-xs text-gray-500 font-normal mt-0.5">Игры</span>
+        <RuSpoiler className="block text-xs text-gray-500 font-normal mt-0.5">Игры</RuSpoiler>
       </h2>
       <ul className="space-y-3">
         {unit.games.map((game) => (
@@ -45,7 +46,7 @@ export default async function LessonPage({ params }: Props) {
               <div className="flex items-center justify-between gap-2">
                 <div>
                   <span className="font-semibold text-slate-800">{game.titleEn}</span>
-                  <span className="block text-xs text-gray-500 mt-0.5">{game.titleRu}</span>
+                  <RuSpoiler className="block text-xs text-gray-500 mt-0.5">{game.titleRu}</RuSpoiler>
                 </div>
                 <div className="flex gap-0.5" aria-label={`Difficulty: ${game.difficulty} out of 3`}>
                   {[1, 2, 3].map((d) => (

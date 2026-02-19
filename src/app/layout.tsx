@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { LayoutWithTranslations } from "@/components/LayoutWithTranslations";
 
 export const metadata: Metadata = {
   title: "Pre-Intermediate Games",
@@ -14,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased min-h-screen text-slate-800">
-        {children}
+        <LayoutWithTranslations>{children}</LayoutWithTranslations>
       </body>
     </html>
   );

@@ -35,3 +35,16 @@
   animation: confetti-fly 1.8s ease-out forwards;
   pointer-events: none;
 }
+
+/* Скрытый перевод (как спойлер в Telegram) — по умолчанию выкл */
+.translation-spoiler {
+  filter: blur(0.35em);
+  user-select: none;
+  pointer-events: none;
+  transition: filter 0.2s ease;
+}
+.translation-spoiler-visible {
+  filter: none;
+  user-select: text;
+  pointer-events: auto;
+}

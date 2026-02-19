@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect, useCallback } from "react";
 import Link from "next/link";
 import type { Lesson } from "@/types/units";
 import { LabelWithRu } from "@/components/ui/LabelWithRu";
+import { RuSpoiler } from "@/components/ui/RuSpoiler";
 import { Confetti } from "@/components/ui/Confetti";
 
 interface Props {
@@ -78,19 +79,19 @@ export function FlashcardsGame({ lesson, unitId }: Props) {
           className="inline-block text-sm text-indigo-600 hover:text-indigo-800 mb-6 font-medium"
         >
           <span>← Back to lesson</span>
-          <span className="block text-xs text-gray-500 mt-0.5">Назад к уроку</span>
+          <RuSpoiler className="block text-xs text-gray-500 mt-0.5">Назад к уроку</RuSpoiler>
         </Link>
         <div className="bg-white/90 backdrop-blur rounded-2xl shadow-lg border border-white/50 p-6 mb-6">
           <LabelWithRu en="Flashcards" ru="Карточки" as="h1" className="text-2xl font-bold mb-2 text-slate-800" />
           <p className="text-sm text-slate-600 mb-4">
             <span>See the phrase, then flip to check the translation. Mark &quot;Know&quot; or &quot;Skip&quot;.</span>
-            <span className="block text-xs text-gray-500 mt-0.5">
+            <RuSpoiler className="block text-xs text-gray-500 mt-0.5">
               Смотрите фразу, переверните карточку для перевода. Отметьте «Знаю» или «Пропустить».
-            </span>
+            </RuSpoiler>
           </p>
           <p className="text-sm text-slate-500">
             <span>{deck.length} cards · about {Math.ceil(LIMIT_SEC / 60)} min</span>
-            <span className="block text-xs text-gray-500 mt-0.5">{deck.length} карточек · около {Math.ceil(LIMIT_SEC / 60)} мин</span>
+            <RuSpoiler className="block text-xs text-gray-500 mt-0.5">{deck.length} карточек · около {Math.ceil(LIMIT_SEC / 60)} мин</RuSpoiler>
           </p>
         </div>
         <button
@@ -98,7 +99,7 @@ export function FlashcardsGame({ lesson, unitId }: Props) {
           className="w-full py-4 px-4 rounded-2xl bg-indigo-500 text-white font-semibold hover:bg-indigo-600 active:scale-[0.98] transition shadow-lg shadow-indigo-500/30"
         >
           <span>Start game</span>
-          <span className="block text-xs text-indigo-200 mt-0.5">Начать игру</span>
+          <RuSpoiler className="block text-xs text-indigo-200 mt-0.5">Начать игру</RuSpoiler>
         </button>
       </main>
     );
@@ -119,18 +120,18 @@ export function FlashcardsGame({ lesson, unitId }: Props) {
           <LabelWithRu en="Done!" ru="Готово!" as="h1" className="text-2xl font-bold mb-2 text-slate-800" />
           <p className="text-slate-600 text-sm mb-6">
             <span>Great warm-up!</span>
-            <span className="block text-xs text-gray-500">Отличная разминка!</span>
+            <RuSpoiler className="block text-xs text-gray-500">Отличная разминка!</RuSpoiler>
           </p>
           <div className="flex justify-center gap-8 mb-6">
             <div className="text-center">
               <span className="block text-2xl font-bold text-green-600">{knownCount}</span>
               <span className="text-sm text-slate-500">Known</span>
-              <span className="block text-xs text-gray-500">Знаете</span>
+              <RuSpoiler className="block text-xs text-gray-500">Знаете</RuSpoiler>
             </div>
             <div className="text-center">
               <span className="block text-2xl font-bold text-slate-400">{skippedCount}</span>
               <span className="text-sm text-slate-500">Skipped</span>
-              <span className="block text-xs text-gray-500">Пропущено</span>
+              <RuSpoiler className="block text-xs text-gray-500">Пропущено</RuSpoiler>
             </div>
           </div>
           <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden mb-8">
@@ -144,7 +145,7 @@ export function FlashcardsGame({ lesson, unitId }: Props) {
             className="block w-full py-3 px-4 rounded-xl bg-indigo-500 text-white font-medium hover:bg-indigo-600 text-center shadow-lg"
           >
             <span>Back to lesson</span>
-            <span className="block text-xs text-indigo-200 mt-0.5">Назад к уроку</span>
+            <RuSpoiler className="block text-xs text-indigo-200 mt-0.5">Назад к уроку</RuSpoiler>
           </Link>
         </div>
       </main>
@@ -157,7 +158,7 @@ export function FlashcardsGame({ lesson, unitId }: Props) {
       <div className="flex justify-between items-center text-sm mb-4">
         <div className="flex items-center gap-2">
           <span className="font-medium text-slate-700">Card {index + 1} / {deck.length}</span>
-          <span className="text-xs text-gray-500">Карточка {index + 1} / {deck.length}</span>
+          <RuSpoiler className="text-xs text-gray-500">Карточка {index + 1} / {deck.length}</RuSpoiler>
         </div>
         <div className="flex items-center gap-1.5 bg-white/80 rounded-lg px-3 py-1.5 shadow-sm">
           <span className="font-mono font-semibold text-indigo-600">{formatTime(secondsLeft)}</span>
@@ -178,11 +179,11 @@ export function FlashcardsGame({ lesson, unitId }: Props) {
       >
         {current && (
           <>
-            <p className="text-xl font-semibold text-slate-800">{showBack ? current.ru : current.en}</p>
+            <p className="text-xl font-semibold text-slate-800">{showBack ? <RuSpoiler>{current.ru}</RuSpoiler> : current.en}</p>
             <p className="text-xs text-slate-400 mt-3">
               {showBack ? "Tap to show English" : "Tap to show translation"}
             </p>
-            <p className="text-xs text-gray-400">Нажмите, чтобы {showBack ? "показать английский" : "показать перевод"}</p>
+            <p className="text-xs text-gray-400"><RuSpoiler>Нажмите, чтобы {showBack ? "показать английский" : "показать перевод"}</RuSpoiler></p>
           </>
         )}
       </button>
@@ -194,7 +195,7 @@ export function FlashcardsGame({ lesson, unitId }: Props) {
           className="flex-1 py-4 px-4 rounded-xl border-2 border-slate-200 bg-white hover:bg-slate-50 hover:border-slate-300 font-medium transition shadow-sm"
         >
           <span>Skip</span>
-          <span className="block text-xs text-gray-500 mt-0.5">Пропустить</span>
+          <RuSpoiler className="block text-xs text-gray-500 mt-0.5">Пропустить</RuSpoiler>
         </button>
         <button
           type="button"
@@ -202,7 +203,7 @@ export function FlashcardsGame({ lesson, unitId }: Props) {
           className="flex-1 py-4 px-4 rounded-xl bg-green-500 text-white font-semibold hover:bg-green-600 active:scale-[0.98] transition shadow-lg shadow-green-500/30"
         >
           <span>Know ✓</span>
-          <span className="block text-xs text-green-200 mt-0.5">Знаю</span>
+          <RuSpoiler className="block text-xs text-green-200 mt-0.5">Знаю</RuSpoiler>
         </button>
       </div>
     </main>

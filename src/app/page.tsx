@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getUnitsData } from "@/lib/data";
 import { LabelWithRu } from "@/components/ui/LabelWithRu";
+import { RuSpoiler } from "@/components/ui/RuSpoiler";
 
 export default async function HomePage() {
   const data = await getUnitsData();
@@ -16,7 +17,7 @@ export default async function HomePage() {
         />
         <p className="text-slate-600 text-sm">
           <span>Pick a unit and lesson — play together as a warm-up!</span>
-          <span className="block text-xs text-gray-500 mt-0.5">Выберите юнит и урок — играйте вместе на разминке.</span>
+          <RuSpoiler className="block text-xs text-gray-500 mt-0.5">Выберите юнит и урок — играйте вместе на разминке.</RuSpoiler>
         </p>
       </div>
       <Link
@@ -26,7 +27,7 @@ export default async function HomePage() {
         <span className="text-2xl" aria-hidden>🃏</span>
         <div className="text-left">
           <span className="font-semibold text-slate-800 block">Irregular verbs — flip cards</span>
-          <span className="text-xs text-gray-500 block mt-0.5">Неправильные глаголы — переворачивающиеся карточки (V1 → V2, V3)</span>
+          <RuSpoiler className="text-xs text-gray-500 block mt-0.5">Неправильные глаголы — переворачивающиеся карточки (V1 → V2, V3)</RuSpoiler>
         </div>
         <span className="ml-auto text-emerald-600 font-medium">→</span>
       </Link>
@@ -36,7 +37,7 @@ export default async function HomePage() {
             <div className="bg-white/80 backdrop-blur rounded-2xl border border-white/50 shadow-lg overflow-hidden">
               <div className="px-5 py-3 bg-indigo-500/10 border-b border-indigo-200/30">
                 <span className="font-semibold text-slate-800">Unit {unit.unit}. {unit.title}</span>
-                <span className="block text-xs text-gray-500">Юнит {unit.unit}. {unit.titleRu ?? unit.title}</span>
+                <RuSpoiler className="block text-xs text-gray-500">Юнит {unit.unit}. {unit.titleRu ?? unit.title}</RuSpoiler>
               </div>
               <ul className="p-3 space-y-1">
                 {unit.lessons.map((lesson) => (
@@ -46,7 +47,7 @@ export default async function HomePage() {
                       className="block px-4 py-3 rounded-xl text-indigo-600 hover:bg-indigo-50 font-medium transition"
                     >
                       <span>{lesson.id} {lesson.title}</span>
-                      <span className="block text-xs text-gray-500">{lesson.id} {lesson.titleRu ?? lesson.title}</span>
+                      <RuSpoiler className="block text-xs text-gray-500">{lesson.id} {lesson.titleRu ?? lesson.title}</RuSpoiler>
                     </Link>
                   </li>
                 ))}

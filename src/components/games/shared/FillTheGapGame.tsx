@@ -4,6 +4,7 @@ import { useState, useMemo, useCallback, useEffect } from "react";
 import Link from "next/link";
 import type { Lesson } from "@/types/units";
 import { LabelWithRu } from "@/components/ui/LabelWithRu";
+import { RuSpoiler } from "@/components/ui/RuSpoiler";
 import { Confetti } from "@/components/ui/Confetti";
 
 interface Props {
@@ -134,7 +135,7 @@ export function FillTheGapGame({ lesson, unitId }: Props) {
       <main className="max-w-lg mx-auto p-6">
         <p className="text-slate-600">
           <span>Not enough vocabulary or adverbs in this lesson for Fill the gap.</span>
-          <span className="block text-xs text-gray-500 mt-0.5">В этом уроке недостаточно слов для игры.</span>
+          <RuSpoiler className="block text-xs text-gray-500 mt-0.5">В этом уроке недостаточно слов для игры.</RuSpoiler>
         </p>
         <Link href={`/unit/${unitId}/lesson/${lesson.id}`} className="mt-4 inline-block text-indigo-600 font-medium">
           ← Back to lesson
@@ -151,17 +152,17 @@ export function FillTheGapGame({ lesson, unitId }: Props) {
           className="inline-block text-sm text-indigo-600 hover:text-indigo-800 mb-6 font-medium"
         >
           <span>← Back to lesson</span>
-          <span className="block text-xs text-gray-500 mt-0.5">Назад к уроку</span>
+          <RuSpoiler className="block text-xs text-gray-500 mt-0.5">Назад к уроку</RuSpoiler>
         </Link>
         <div className="bg-white/90 backdrop-blur rounded-2xl shadow-lg border border-white/50 p-6 mb-6">
           <LabelWithRu en="Fill the gap" ru="Вставь слово" as="h1" className="text-2xl font-bold mb-2 text-slate-800" />
           <p className="text-sm text-slate-600 mb-4">
             <span>Choose the correct word or phrase to complete the sentence.</span>
-            <span className="block text-xs text-gray-500 mt-0.5">Выберите правильное слово или фразу вместо пропуска.</span>
+            <RuSpoiler className="block text-xs text-gray-500 mt-0.5">Выберите правильное слово или фразу вместо пропуска.</RuSpoiler>
           </p>
           <p className="text-sm text-slate-500">
             <span>{questions.length} questions · 3–5 min</span>
-            <span className="block text-xs text-gray-500 mt-0.5">{questions.length} вопросов · 3–5 мин</span>
+            <RuSpoiler className="block text-xs text-gray-500 mt-0.5">{questions.length} вопросов · 3–5 мин</RuSpoiler>
           </p>
         </div>
         <button
@@ -169,7 +170,7 @@ export function FillTheGapGame({ lesson, unitId }: Props) {
           className="w-full py-4 px-4 rounded-2xl bg-indigo-500 text-white font-semibold hover:bg-indigo-600 active:scale-[0.98] transition shadow-lg shadow-indigo-500/30"
         >
           <span>Start game</span>
-          <span className="block text-xs text-indigo-200 mt-0.5">Начать игру</span>
+          <RuSpoiler className="block text-xs text-indigo-200 mt-0.5">Начать игру</RuSpoiler>
         </button>
       </main>
     );
@@ -187,7 +188,7 @@ export function FillTheGapGame({ lesson, unitId }: Props) {
           <LabelWithRu en="Done!" ru="Готово!" as="h1" className="text-2xl font-bold mb-2 text-slate-800" />
           <p className="text-slate-600 text-sm mb-6">
             <span>Score: {score} / {questions.length}</span>
-            <span className="block text-xs text-gray-500 mt-0.5">Счёт: {score} из {questions.length}</span>
+            <RuSpoiler className="block text-xs text-gray-500 mt-0.5">Счёт: {score} из {questions.length}</RuSpoiler>
           </p>
           <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden mb-8">
             <div
@@ -200,7 +201,7 @@ export function FillTheGapGame({ lesson, unitId }: Props) {
             className="block w-full py-3 px-4 rounded-xl bg-indigo-500 text-white font-medium hover:bg-indigo-600 text-center shadow-lg"
           >
             <span>Back to lesson</span>
-            <span className="block text-xs text-indigo-200 mt-0.5">Назад к уроку</span>
+            <RuSpoiler className="block text-xs text-indigo-200 mt-0.5">Назад к уроку</RuSpoiler>
           </Link>
         </div>
       </main>
@@ -216,7 +217,7 @@ export function FillTheGapGame({ lesson, unitId }: Props) {
         </span>
         <span className="text-slate-500">
           Score: {score}
-          <span className="block text-xs text-gray-500">Счёт</span>
+          <RuSpoiler className="block text-xs text-gray-500">Счёт</RuSpoiler>
         </span>
       </div>
       <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden mb-6">
