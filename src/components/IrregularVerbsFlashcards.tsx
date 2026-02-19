@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef } from "react";
-import { RuSpoiler } from "@/components/ui/RuSpoiler";
 import type { IrregularVerb } from "@/data/irregularVerbsTable1";
 import { irregularVerbsTable1 } from "@/data/irregularVerbsTable1";
 
@@ -25,8 +24,7 @@ export function IrregularVerbsFlashcards() {
   const [collectionId, setCollectionId] = useState<CollectionId>("table1");
   const [index, setIndex] = useState(0);
   const [showBack, setShowBack] = useState(false);
-  const [showTranslation, setShowTranslation] = useState(false);
-  const [shuffledDeck, setShuffledDeck] = useState<IrregularVerb[] | null>(null);
+  const [shuffledDeck, setShuffledDeck] = useState<IrregularVerb[] | null>(() => shuffleArray(irregularVerbsTable1));
   const [gordonVoice, setGordonVoice] = useState<SpeechSynthesisVoice | null>(null);
   const pendingIndexRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const speechAbortRef = useRef<(() => void) | null>(null);
@@ -34,8 +32,8 @@ export function IrregularVerbsFlashcards() {
 
   useEffect(() => {
     const load = () => {
-      const gordon = window.speechSynthesis.getVoices().find((v) => v.name.includes("Gordon"));
-      setGordonVoice(gordon ?? null);
+      const aaron = window.speechSynthesis.getVoices().find((v) => v.name.includes("Aaron"));
+      setGordonVoice(aaron ?? null);
     };
     load();
     window.speechSynthesis?.addEventListener("voiceschanged", load);
@@ -50,7 +48,9 @@ export function IrregularVerbsFlashcards() {
     : list;
 
   useEffect(() => {
-    setShuffledDeck(null);
+    const coll = COLLECTIONS.find((c) => c.id === collectionId)!;
+    const nextList = coll.verbs.length ? coll.verbs : [];
+    setShuffledDeck(shuffleArray(nextList));
     setIndex(0);
   }, [collectionId]);
 
@@ -62,7 +62,6 @@ export function IrregularVerbsFlashcards() {
     setShuffledDeck(shuffleArray(list));
     setIndex(0);
     setShowBack(false);
-    setShowTranslation(false);
   }, [list]);
 
   const current = displayList[index];
@@ -79,12 +78,6 @@ export function IrregularVerbsFlashcards() {
   const handleFlip = () => {
     cancelSpeech();
     setShowBack((b) => !b);
-    if (!showBack) setShowTranslation(false);
-  };
-
-  const handleShowTranslation = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setShowTranslation(true);
   };
 
   const SPEAK_DELAY_MS = 550;
@@ -142,7 +135,6 @@ export function IrregularVerbsFlashcards() {
     if (showBack) {
       if (pendingIndexRef.current) clearTimeout(pendingIndexRef.current);
       setShowBack(false);
-      setShowTranslation(false);
       pendingIndexRef.current = setTimeout(() => {
         pendingIndexRef.current = null;
         setIndex(nextIndex);
@@ -151,7 +143,6 @@ export function IrregularVerbsFlashcards() {
     }
     setIndex(nextIndex);
     setShowBack(false);
-    setShowTranslation(false);
   };
 
   const goNext = () => {
@@ -160,7 +151,6 @@ export function IrregularVerbsFlashcards() {
     if (showBack) {
       if (pendingIndexRef.current) clearTimeout(pendingIndexRef.current);
       setShowBack(false);
-      setShowTranslation(false);
       pendingIndexRef.current = setTimeout(() => {
         pendingIndexRef.current = null;
         setIndex(nextIndex);
@@ -169,7 +159,6 @@ export function IrregularVerbsFlashcards() {
     }
     setIndex(nextIndex);
     setShowBack(false);
-    setShowTranslation(false);
   };
 
   return (
@@ -186,7 +175,6 @@ export function IrregularVerbsFlashcards() {
                   setCollectionId(c.id);
                   setIndex(0);
                   setShowBack(false);
-                  setShowTranslation(false);
                 }}
                 disabled={c.verbs.length === 0}
                 className={`px-3 py-1.5 rounded-lg text-sm font-medium transition ${
@@ -204,7 +192,7 @@ export function IrregularVerbsFlashcards() {
 
           {!hasCards && (
             <p className="text-sm text-slate-500 py-4">
-              This collection is empty. / <RuSpoiler>В этой коллекции пока нет глаголов.</RuSpoiler>
+              This collection is empty. / В этой коллекции пока нет глаголов.
             </p>
           )}
 
@@ -225,92 +213,95 @@ export function IrregularVerbsFlashcards() {
                 </button>
               </div>
 
-              <div className="flex items-stretch gap-2 mt-2 min-h-[200px]">
+              <div className="mt-2 min-h-[200px] relative">
+                <div
+                  className="w-full min-h-[200px] overflow-hidden rounded-2xl cursor-pointer"
+                  style={{ perspective: "1000px" }}
+                  onClick={handleFlip}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleFlip(); } }}
+                  aria-label={showBack ? "Flip card to show verb" : "Flip card to show answer"}
+                >
+                  <div
+                    className="relative w-full h-full min-h-[200px] transition-transform duration-500 ease-in-out"
+                    style={{ transformStyle: "preserve-3d", transform: showBack ? "rotateY(180deg)" : "rotateY(0deg)", WebkitBackfaceVisibility: "hidden", backfaceVisibility: "hidden" }}
+                  >
+                    {/* Front */}
+                    <div
+                      className="absolute inset-0 w-full min-h-[200px] p-8 rounded-2xl bg-[#faf9f7] border border-slate-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.06)] flex flex-col items-center justify-center text-center"
+                      style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
+                    >
+                      {current && (
+                        <>
+                          <p className="text-3xl font-bold text-slate-800 tracking-tight min-h-[2.5rem] flex items-center justify-center">{current.v1}</p>
+                          <p className="mt-2 text-slate-500 text-sm">{current.ru}</p>
+                          <span className="mt-5 text-slate-200 text-xl animate-pulse" aria-hidden>↻</span>
+                        </>
+                      )}
+                    </div>
+                    {/* Back */}
+                    <div
+                      className="absolute inset-0 w-full min-h-[200px] p-8 rounded-2xl bg-[#f5f3f0] border border-slate-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.06)] flex flex-col items-center justify-center text-center"
+                      style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+                    >
+                      {current && (
+                        <>
+                          <p className="text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight min-h-[2.5rem] flex items-center justify-center flex-wrap gap-x-2 gap-y-1 text-center">
+                            <span>{current.v1}</span>
+                            <span className="text-slate-400 font-normal">→</span>
+                            <span>{current.v2}</span>
+                            <span className="text-slate-400 font-normal">→</span>
+                            <span>{current.v3}</span>
+                          </p>
+                          <p className="text-slate-500 text-sm mt-2">{current.ru}</p>
+                          <span className="mt-4 text-slate-200 text-xl" aria-hidden>↻</span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                {/* Кнопка озвучки поверх карточки — всегда справа сверху и работает с обеих сторон */}
+                {current && (
+                  <div
+                    className="absolute top-3 right-3 z-20"
+                    onClick={(e) => e.stopPropagation()}
+                    onPointerDown={(e) => e.stopPropagation()}
+                  >
+                    <button
+                      type="button"
+                      onClick={handleSpeak}
+                      className="p-2.5 rounded-full bg-white/90 shadow-sm border border-slate-200/80 hover:bg-slate-50 text-slate-600 hover:text-slate-800 transition touch-manipulation"
+                      aria-label="Listen (V1, V2, V3)"
+                      title="Listen (V1, V2, V3)"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                      </svg>
+                    </button>
+                  </div>
+                )}
+              </div>
+              <div className="flex gap-4 mt-4">
                 <button
                   type="button"
                   onClick={goPrev}
                   disabled={!canPrev}
-                  className="flex-shrink-0 w-[78px] min-h-[200px] rounded-xl bg-slate-100 hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-slate-500 hover:text-slate-700 transition touch-manipulation"
+                  className="flex-1 py-4 rounded-xl bg-slate-100 hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-slate-600 hover:text-slate-800 text-xl font-medium transition touch-manipulation"
                   aria-label="Previous card"
                 >
-                  <span className="text-xl font-medium">←</span>
+                  ← Prev
                 </button>
-                <div
-                  className="flex-1 min-w-0 min-h-[200px] perspective-1000 cursor-pointer"
-                style={{ perspective: "1000px" }}
-                onClick={handleFlip}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleFlip(); } }}
-                aria-label={showBack ? "Flip card to show verb" : "Flip card to show answer"}
-              >
-                <div
-                  className="relative w-full h-full min-h-[200px] transition-transform duration-500 ease-in-out"
-                  style={{ transformStyle: "preserve-3d", transform: showBack ? "rotateY(180deg)" : "rotateY(0deg)" }}
+                <button
+                  type="button"
+                  onClick={goNext}
+                  disabled={!canNext}
+                  className="flex-1 py-4 rounded-xl bg-slate-100 hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-slate-600 hover:text-slate-800 text-xl font-medium transition touch-manipulation"
+                  aria-label="Next card"
                 >
-                  {/* Front: verb in main slot, subtle translation link below */}
-                  <div
-                    className="absolute inset-0 w-full min-h-[200px] p-8 rounded-2xl border-l-4 border-emerald-400 bg-gradient-to-br from-white to-emerald-50/40 shadow-[0_8px_24px_rgba(16,185,129,0.12),0_2px_8px_rgba(0,0,0,0.06)] backface-hidden flex flex-col items-center justify-center text-center"
-                    style={{ backfaceVisibility: "hidden" }}
-                  >
-                    {current && (
-                      <>
-                        <p className="text-3xl font-bold text-slate-800 tracking-tight min-h-[2.5rem] flex items-center justify-center">{current.v1}</p>
-                        <button
-                          type="button"
-                          onClick={(e) => { e.stopPropagation(); handleShowTranslation(e); }}
-                          className="mt-5 text-xs text-slate-400 hover:text-slate-600 underline-offset-2 transition"
-                        >
-                          <RuSpoiler>Показать перевод</RuSpoiler>
-                        </button>
-                        {showTranslation && (
-                          <p className="mt-1 text-slate-500 text-sm"><RuSpoiler>{current.ru}</RuSpoiler></p>
-                        )}
-                        <span className="mt-5 text-slate-200 text-xl animate-pulse" aria-hidden>↻</span>
-                      </>
-                    )}
-                  </div>
-                  {/* Back: V2 and V3 in same size/position as V1 */}
-                  <div
-                    className="absolute inset-0 w-full min-h-[200px] p-8 rounded-2xl border-l-4 border-emerald-500 bg-gradient-to-br from-white to-emerald-50/50 shadow-[0_8px_24px_rgba(16,185,129,0.12),0_2px_8px_rgba(0,0,0,0.06)] backface-hidden flex flex-col items-center justify-center text-center"
-                    style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
-                  >
-                    {current && (
-                      <>
-                        <div className="text-3xl font-bold text-slate-800 tracking-tight min-h-[2.5rem] flex flex-col items-center justify-center gap-0.5">
-                          <span>{current.v2}</span>
-                          <span>{current.v3}</span>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={handleSpeak}
-                          className="mt-4 p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-800 transition touch-manipulation"
-                          aria-label="Listen to all three forms"
-                          title="Listen (V1, V2, V3)"
-                        >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                          </svg>
-                        </button>
-                        {showTranslation && (
-                          <p className="text-slate-500 text-sm mt-2"><RuSpoiler>{current.ru}</RuSpoiler></p>
-                        )}
-                        <span className="mt-4 text-slate-200 text-xl" aria-hidden>↻</span>
-                      </>
-                    )}
-                  </div>
-                </div>
+                  Next →
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={goNext}
-                disabled={!canNext}
-                className="flex-shrink-0 w-[78px] min-h-[200px] rounded-xl bg-slate-100 hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-slate-500 hover:text-slate-700 transition touch-manipulation"
-                aria-label="Next card"
-              >
-                <span className="text-xl font-medium">→</span>
-              </button>
-            </div>
             </>
           )}
         </div>
