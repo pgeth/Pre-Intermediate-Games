@@ -19,6 +19,17 @@ export default async function HomePage() {
           <span className="block text-xs text-gray-500 mt-0.5">Выберите юнит и урок — играйте вместе на разминке.</span>
         </p>
       </div>
+      <Link
+        href="/irregular-verbs"
+        className="flex items-center gap-3 mb-8 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-200/50 hover:bg-emerald-500/20 transition"
+      >
+        <span className="text-2xl" aria-hidden>🃏</span>
+        <div className="text-left">
+          <span className="font-semibold text-slate-800 block">Irregular verbs — flip cards</span>
+          <span className="text-xs text-gray-500 block mt-0.5">Неправильные глаголы — переворачивающиеся карточки (V1 → V2, V3)</span>
+        </div>
+        <span className="ml-auto text-emerald-600 font-medium">→</span>
+      </Link>
       <ul className="space-y-4">
         {data.units.map((unit) => (
           <li key={unit.id}>
