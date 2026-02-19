@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { RuSpoiler } from "@/components/ui/RuSpoiler";
 import type { IrregularVerb } from "@/data/irregularVerbsTable1";
 import { irregularVerbsTable1 } from "@/data/irregularVerbsTable1";
@@ -12,40 +12,50 @@ const COLLECTIONS: { id: CollectionId; label: string; verbs: IrregularVerb[] }[]
   { id: "table2", label: "Table Two", verbs: [] },
 ];
 
-function normalizeForSearch(s: string): string {
-  return s
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/\p{Diacritic}/gu, "")
-    .trim();
-}
-
-function matchesSearch(verb: IrregularVerb, query: string): boolean {
-  if (!query) return true;
-  const q = normalizeForSearch(query);
-  const v1 = normalizeForSearch(verb.v1);
-  const ru = normalizeForSearch(verb.ru);
-  return v1.includes(q) || ru.includes(q);
+function shuffleArray<T>(arr: T[]): T[] {
+  const out = [...arr];
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
 }
 
 export function IrregularVerbsFlashcards() {
   const [collectionId, setCollectionId] = useState<CollectionId>("table1");
-  const [search, setSearch] = useState("");
   const [index, setIndex] = useState(0);
   const [showBack, setShowBack] = useState(false);
   const [showTranslation, setShowTranslation] = useState(false);
+  const [shuffledDeck, setShuffledDeck] = useState<IrregularVerb[] | null>(null);
+  const pendingIndexRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const collection = COLLECTIONS.find((c) => c.id === collectionId)!;
-  const filteredVerbs = useMemo(() => {
-    const list = collection.verbs.length ? collection.verbs : [];
-    if (!search.trim()) return list;
-    return list.filter((v) => matchesSearch(v, search));
-  }, [collection.verbs, search]);
+  const list = collection.verbs.length ? collection.verbs : [];
 
-  const current = filteredVerbs[index];
-  const hasCards = filteredVerbs.length > 0;
+  const displayList = shuffledDeck && shuffledDeck.length === list.length
+    ? shuffledDeck
+    : list;
+
+  useEffect(() => {
+    setShuffledDeck(null);
+    setIndex(0);
+  }, [collectionId]);
+
+  useEffect(() => () => {
+    if (pendingIndexRef.current) clearTimeout(pendingIndexRef.current);
+  }, []);
+
+  const handleShuffle = useCallback(() => {
+    setShuffledDeck(shuffleArray(list));
+    setIndex(0);
+    setShowBack(false);
+    setShowTranslation(false);
+  }, [list]);
+
+  const current = displayList[index];
+  const hasCards = displayList.length > 0;
   const canPrev = index > 0;
-  const canNext = index < filteredVerbs.length - 1;
+  const canNext = index < displayList.length - 1;
 
   const handleFlip = () => {
     setShowBack((b) => !b);
@@ -57,14 +67,38 @@ export function IrregularVerbsFlashcards() {
     setShowTranslation(true);
   };
 
+  const FLIP_DURATION_MS = 500;
+
   const goPrev = () => {
-    setIndex((i) => Math.max(0, i - 1));
+    const nextIndex = Math.max(0, index - 1);
+    if (showBack) {
+      if (pendingIndexRef.current) clearTimeout(pendingIndexRef.current);
+      setShowBack(false);
+      setShowTranslation(false);
+      pendingIndexRef.current = setTimeout(() => {
+        pendingIndexRef.current = null;
+        setIndex(nextIndex);
+      }, FLIP_DURATION_MS);
+      return;
+    }
+    setIndex(nextIndex);
     setShowBack(false);
     setShowTranslation(false);
   };
 
   const goNext = () => {
-    setIndex((i) => Math.min(filteredVerbs.length - 1, i + 1));
+    const nextIndex = Math.min(displayList.length - 1, index + 1);
+    if (showBack) {
+      if (pendingIndexRef.current) clearTimeout(pendingIndexRef.current);
+      setShowBack(false);
+      setShowTranslation(false);
+      pendingIndexRef.current = setTimeout(() => {
+        pendingIndexRef.current = null;
+        setIndex(nextIndex);
+      }, FLIP_DURATION_MS);
+      return;
+    }
+    setIndex(nextIndex);
     setShowBack(false);
     setShowTranslation(false);
   };
@@ -99,105 +133,104 @@ export function IrregularVerbsFlashcards() {
             ))}
           </div>
 
-          {/* Quick search */}
-          <div>
-            <label htmlFor="verb-search" className="text-xs font-medium text-slate-500 uppercase tracking-wide">
-              Search / <RuSpoiler>Поиск</RuSpoiler> (English or Russian)
-            </label>
-            <input
-              id="verb-search"
-              type="text"
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setIndex(0);
-                setShowBack(false);
-                setShowTranslation(false);
-              }}
-              placeholder="e.g. go, идти..."
-              className="mt-1.5 w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 focus:border-emerald-400"
-            />
-          </div>
-
           {!hasCards && (
             <p className="text-sm text-slate-500 py-4">
-              {search
-                ? <>No verbs match the search. / <RuSpoiler>По вашему запросу ничего не найдено.</RuSpoiler></>
-                : <>This collection is empty. / <RuSpoiler>В этой коллекции пока нет глаголов.</RuSpoiler></>}
+              This collection is empty. / <RuSpoiler>В этой коллекции пока нет глаголов.</RuSpoiler>
             </p>
           )}
 
           {hasCards && (
             <>
-              <div className="flex items-center justify-between text-sm text-slate-600">
+              <div className="flex items-center justify-between text-sm text-slate-600 flex-wrap gap-2">
                 <span>
-                  Card {index + 1} / {filteredVerbs.length}
+                  Card {index + 1} / {displayList.length}
                 </span>
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={goPrev}
-                    disabled={!canPrev}
-                    className="px-3 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
-                  >
-                    ← Prev
-                  </button>
-                  <button
-                    type="button"
-                    onClick={goNext}
-                    disabled={!canNext}
-                    className="px-3 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
-                  >
-                    Next →
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={handleShuffle}
+                  disabled={!hasCards}
+                  className="px-3 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                  title="Shuffle deck"
+                >
+                  Shuffle
+                </button>
               </div>
 
-              <button
-                type="button"
+              <div className="flex items-stretch gap-2 mt-2 min-h-[200px]">
+                <button
+                  type="button"
+                  onClick={goPrev}
+                  disabled={!canPrev}
+                  className="flex-shrink-0 w-[78px] min-h-[200px] rounded-xl bg-slate-100 hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-slate-500 hover:text-slate-700 transition touch-manipulation"
+                  aria-label="Previous card"
+                >
+                  <span className="text-xl font-medium">←</span>
+                </button>
+                <div
+                  className="flex-1 min-w-0 min-h-[200px] perspective-1000 cursor-pointer"
+                style={{ perspective: "1000px" }}
                 onClick={handleFlip}
-                className="w-full min-h-[200px] p-6 rounded-2xl border-2 border-emerald-200/50 bg-white shadow-lg hover:shadow-xl hover:scale-[1.01] active:scale-[0.99] text-left transition-all focus:outline-none focus:ring-2 focus:ring-emerald-400/50"
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleFlip(); } }}
+                aria-label={showBack ? "Flip card to show verb" : "Flip card to show answer"}
               >
-                {current && (
-                  <>
-                    {!showBack ? (
+                <div
+                  className="relative w-full h-full min-h-[200px] transition-transform duration-500 ease-in-out"
+                  style={{ transformStyle: "preserve-3d", transform: showBack ? "rotateY(180deg)" : "rotateY(0deg)" }}
+                >
+                  {/* Front: verb in main slot, subtle translation link below */}
+                  <div
+                    className="absolute inset-0 w-full min-h-[200px] p-8 rounded-2xl border-l-4 border-emerald-400 bg-gradient-to-br from-white to-emerald-50/40 shadow-[0_8px_24px_rgba(16,185,129,0.12),0_2px_8px_rgba(0,0,0,0.06)] backface-hidden flex flex-col items-center justify-center text-center"
+                    style={{ backfaceVisibility: "hidden" }}
+                  >
+                    {current && (
                       <>
-                        <p className="text-2xl font-bold text-slate-800">{current.v1}</p>
-                        <p className="text-sm text-slate-500 mt-2">
-                          Name Past simple (V2) and Past participle (V3). Flip to check.
-                        </p>
-                        <p className="text-xs text-gray-500 mt-0.5"><RuSpoiler>Назовите вторую и третью форму. Переверните, чтобы проверить.</RuSpoiler></p>
-                        <div className="mt-4">
-                          <button
-                            type="button"
-                            onClick={handleShowTranslation}
-                            className="px-4 py-2 rounded-xl bg-amber-100 text-amber-800 hover:bg-amber-200 font-medium text-sm transition"
-                          >
-                            <RuSpoiler>Показать перевод</RuSpoiler>
-                          </button>
-                          {showTranslation && (
-                            <p className="mt-2 text-slate-600 font-medium"><RuSpoiler>{current.ru}</RuSpoiler></p>
-                          )}
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <p className="text-lg font-semibold text-slate-700">Past simple</p>
-                        <p className="text-xl text-emerald-700 font-bold mt-0.5">{current.v2}</p>
-                        <p className="text-lg font-semibold text-slate-700 mt-4">Past participle</p>
-                        <p className="text-xl text-emerald-700 font-bold mt-0.5">{current.v3}</p>
+                        <p className="text-3xl font-bold text-slate-800 tracking-tight min-h-[2.5rem] flex items-center justify-center">{current.v1}</p>
+                        <button
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); handleShowTranslation(e); }}
+                          className="mt-5 text-xs text-slate-400 hover:text-slate-600 underline-offset-2 transition"
+                        >
+                          <RuSpoiler>Показать перевод</RuSpoiler>
+                        </button>
                         {showTranslation && (
-                          <p className="text-slate-600 mt-4 pt-3 border-t border-slate-100">
-                            <span className="text-slate-500"><RuSpoiler>Перевод: </RuSpoiler></span>
-                            <RuSpoiler>{current.ru}</RuSpoiler>
-                          </p>
+                          <p className="mt-1 text-slate-500 text-sm"><RuSpoiler>{current.ru}</RuSpoiler></p>
                         )}
-                        <p className="text-xs text-slate-400 mt-4">Tap to flip back</p>
+                        <span className="mt-5 text-slate-200 text-xl animate-pulse" aria-hidden>↻</span>
                       </>
                     )}
-                  </>
-                )}
+                  </div>
+                  {/* Back: V2 and V3 in same size/position as V1 */}
+                  <div
+                    className="absolute inset-0 w-full min-h-[200px] p-8 rounded-2xl border-l-4 border-emerald-500 bg-gradient-to-br from-white to-emerald-50/50 shadow-[0_8px_24px_rgba(16,185,129,0.12),0_2px_8px_rgba(0,0,0,0.06)] backface-hidden flex flex-col items-center justify-center text-center"
+                    style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+                  >
+                    {current && (
+                      <>
+                        <div className="text-3xl font-bold text-slate-800 tracking-tight min-h-[2.5rem] flex flex-col items-center justify-center gap-0.5">
+                          <span>{current.v2}</span>
+                          <span>{current.v3}</span>
+                        </div>
+                        {showTranslation && (
+                          <p className="text-slate-500 text-sm mt-4"><RuSpoiler>{current.ru}</RuSpoiler></p>
+                        )}
+                        <span className="mt-5 text-slate-200 text-xl" aria-hidden>↻</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={goNext}
+                disabled={!canNext}
+                className="flex-shrink-0 w-[78px] min-h-[200px] rounded-xl bg-slate-100 hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-slate-500 hover:text-slate-700 transition touch-manipulation"
+                aria-label="Next card"
+              >
+                <span className="text-xl font-medium">→</span>
               </button>
+            </div>
             </>
           )}
         </div>
