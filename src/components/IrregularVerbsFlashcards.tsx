@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { RuSpoiler } from "@/components/ui/RuSpoiler";
 import type { IrregularVerb } from "@/data/irregularVerbsTable1";
 import { irregularVerbsTable1 } from "@/data/irregularVerbsTable1";
@@ -27,7 +27,20 @@ export function IrregularVerbsFlashcards() {
   const [showBack, setShowBack] = useState(false);
   const [showTranslation, setShowTranslation] = useState(false);
   const [shuffledDeck, setShuffledDeck] = useState<IrregularVerb[] | null>(null);
+  const [gordonVoice, setGordonVoice] = useState<SpeechSynthesisVoice | null>(null);
   const pendingIndexRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const speechAbortRef = useRef<(() => void) | null>(null);
+  const speechDelayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    const load = () => {
+      const gordon = window.speechSynthesis.getVoices().find((v) => v.name.includes("Gordon"));
+      setGordonVoice(gordon ?? null);
+    };
+    load();
+    window.speechSynthesis?.addEventListener("voiceschanged", load);
+    return () => window.speechSynthesis?.removeEventListener("voiceschanged", load);
+  }, []);
 
   const collection = COLLECTIONS.find((c) => c.id === collectionId)!;
   const list = collection.verbs.length ? collection.verbs : [];
@@ -57,7 +70,14 @@ export function IrregularVerbsFlashcards() {
   const canPrev = index > 0;
   const canNext = index < displayList.length - 1;
 
+  const cancelSpeech = useCallback(() => {
+    if (speechDelayRef.current) clearTimeout(speechDelayRef.current);
+    speechDelayRef.current = null;
+    window.speechSynthesis?.cancel();
+  }, []);
+
   const handleFlip = () => {
+    cancelSpeech();
     setShowBack((b) => !b);
     if (!showBack) setShowTranslation(false);
   };
@@ -67,9 +87,57 @@ export function IrregularVerbsFlashcards() {
     setShowTranslation(true);
   };
 
+  const SPEAK_DELAY_MS = 550;
+
+  const speakVerbForms = useCallback((verb: IrregularVerb) => {
+    if (typeof window === "undefined" || !window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    if (speechDelayRef.current) clearTimeout(speechDelayRef.current);
+    const texts = [verb.v1, verb.v2, verb.v3];
+    let i = 0;
+    const speakNext = () => {
+      if (i >= texts.length) {
+        speechAbortRef.current = null;
+        return;
+      }
+      const u = new SpeechSynthesisUtterance(texts[i]);
+      u.lang = "en-GB";
+      u.rate = 0.9;
+      if (gordonVoice) u.voice = gordonVoice;
+      u.onend = () => {
+        i++;
+        speechDelayRef.current = setTimeout(speakNext, SPEAK_DELAY_MS);
+      };
+      u.onerror = () => {
+        i++;
+        speechDelayRef.current = setTimeout(speakNext, SPEAK_DELAY_MS);
+      };
+      speechAbortRef.current = () => {
+        if (speechDelayRef.current) clearTimeout(speechDelayRef.current);
+        speechDelayRef.current = null;
+        window.speechSynthesis.cancel();
+      };
+      window.speechSynthesis.speak(u);
+    };
+    speakNext();
+  }, [gordonVoice]);
+
+  const handleSpeak = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (current) speakVerbForms(current);
+  };
+
+  useEffect(() => {
+    return () => {
+      cancelSpeech();
+      speechAbortRef.current = null;
+    };
+  }, [cancelSpeech]);
+
   const FLIP_DURATION_MS = 500;
 
   const goPrev = () => {
+    cancelSpeech();
     const nextIndex = Math.max(0, index - 1);
     if (showBack) {
       if (pendingIndexRef.current) clearTimeout(pendingIndexRef.current);
@@ -87,6 +155,7 @@ export function IrregularVerbsFlashcards() {
   };
 
   const goNext = () => {
+    cancelSpeech();
     const nextIndex = Math.min(displayList.length - 1, index + 1);
     if (showBack) {
       if (pendingIndexRef.current) clearTimeout(pendingIndexRef.current);
@@ -212,10 +281,21 @@ export function IrregularVerbsFlashcards() {
                           <span>{current.v2}</span>
                           <span>{current.v3}</span>
                         </div>
+                        <button
+                          type="button"
+                          onClick={handleSpeak}
+                          className="mt-4 p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-800 transition touch-manipulation"
+                          aria-label="Listen to all three forms"
+                          title="Listen (V1, V2, V3)"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                          </svg>
+                        </button>
                         {showTranslation && (
-                          <p className="text-slate-500 text-sm mt-4"><RuSpoiler>{current.ru}</RuSpoiler></p>
+                          <p className="text-slate-500 text-sm mt-2"><RuSpoiler>{current.ru}</RuSpoiler></p>
                         )}
-                        <span className="mt-5 text-slate-200 text-xl" aria-hidden>↻</span>
+                        <span className="mt-4 text-slate-200 text-xl" aria-hidden>↻</span>
                       </>
                     )}
                   </div>
