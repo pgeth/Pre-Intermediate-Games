@@ -3,6 +3,16 @@ export interface VocabItem {
   ru: string;
 }
 
+/** One correct question (A) and one answer in past tense (B) for "Tell about..." quiz */
+export interface QuizTellAboutPair {
+  question: string;
+  answer: string;
+  wrongQuestions: string[];
+  /** Russian translation for console/host */
+  questionRu?: string;
+  answerRu?: string;
+}
+
 export interface Lesson {
   id: string;
   lesson: number;
@@ -13,6 +23,8 @@ export interface Lesson {
   vocabulary: VocabItem[];
   prompts: string[];
   adverbs: string[];
+  /** Pairs for "Tell about..." quiz (answer B → choose question A). Used by combined lessons. */
+  quizTellAboutPairs?: QuizTellAboutPair[];
 }
 
 export interface GameConfig {

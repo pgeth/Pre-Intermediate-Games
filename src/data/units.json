@@ -41,11 +41,84 @@
             "what young/elderly people, children like doing"
           ],
           "adverbs": ["usually", "sometimes", "often", "never"]
+        },
+        {
+          "id": "1.2-1.4",
+          "lesson": 2,
+          "title": "True love, Nice day, Someone special",
+          "titleRu": "Настоящая любовь, Приятный день, Кто-то особенный",
+          "grammar": "Past Simple",
+          "vocabulary": [],
+          "prompts": [],
+          "adverbs": [],
+          "quizTellAboutPairs": [
+            {
+              "question": "Where did they meet for the first time?",
+              "answer": "They met at a university party.",
+              "wrongQuestions": ["When did they get married?", "Did they have a wedding party?", "What did they have in common?"],
+              "questionRu": "Где они познакомились впервые?",
+              "answerRu": "Они познакомились на вечеринке в университете."
+            },
+            {
+              "question": "Did they fall in love at first sight?",
+              "answer": "No, they didn't.",
+              "wrongQuestions": ["Where did they meet for the first time?", "Did they get on well at once?", "When did they get married?"],
+              "questionRu": "Они влюбились с первого взгляда?",
+              "answerRu": "Нет."
+            },
+            {
+              "question": "Did they get on well at once?",
+              "answer": "Yes, they did.",
+              "wrongQuestions": ["What did they have in common?", "Where was their wedding party?", "Did they fall in love at first sight?"],
+              "questionRu": "Они сразу хорошо ладили?",
+              "answerRu": "Да."
+            },
+            {
+              "question": "What did they have in common?",
+              "answer": "They had the same hobbies.",
+              "wrongQuestions": ["Where did they meet for the first time?", "When did they get married?", "Did they have a wedding party?"],
+              "questionRu": "Что у них было общего?",
+              "answerRu": "У них были одинаковые хобби."
+            },
+            {
+              "question": "When did they get married?",
+              "answer": "They got married five years ago.",
+              "wrongQuestions": ["Where did they meet for the first time?", "Where was their wedding party?", "What did they have in common?"],
+              "questionRu": "Когда они поженились?",
+              "answerRu": "Они поженились пять лет назад."
+            },
+            {
+              "question": "Did they have a wedding party?",
+              "answer": "Yes, they did. It was in the countryside.",
+              "wrongQuestions": ["When did they get married?", "Where was their wedding party?", "Did they get on well at once?"],
+              "questionRu": "У них была свадебная вечеринка?",
+              "answerRu": "Да. Она была за городом."
+            },
+            {
+              "question": "Where was their wedding party?",
+              "answer": "It was in a restaurant.",
+              "wrongQuestions": ["When did they get married?", "What did they have in common?", "Did they fall in love at first sight?"],
+              "questionRu": "Где была их свадебная вечеринка?",
+              "answerRu": "В ресторане."
+            },
+            {
+              "question": "Do their characters help them to get on well?",
+              "answer": "Yes. They are both easy-going and kind.",
+              "wrongQuestions": ["Where did they meet for the first time?", "Did they have a wedding party?", "When did they get married?"],
+              "questionRu": "Их характер помогает им ладить?",
+              "answerRu": "Да. Они оба лёгкие в общении и добрые."
+            }
+          ]
         }
       ],
       "games": [
-        { "id": "flashcards", "type": "2d", "titleEn": "Flashcards", "titleRu": "Карточки", "difficulty": 1 },
-        { "id": "fill-the-gap", "type": "2d", "titleEn": "Fill the gap", "titleRu": "Вставь слово", "difficulty": 2 }
+        {
+          "id": "tell-about",
+          "type": "2d",
+          "titleEn": "Talk about a couple",
+          "titleRu": "Расскажи о паре",
+          "difficulty": 2
+        }
       ]
     }
   ]

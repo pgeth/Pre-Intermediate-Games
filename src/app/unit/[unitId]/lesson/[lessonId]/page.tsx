@@ -37,7 +37,7 @@ export default async function LessonPage({ params }: Props) {
         <RuSpoiler className="block text-xs text-gray-500 font-normal mt-0.5">Игры</RuSpoiler>
       </h2>
       <ul className="space-y-3">
-        {unit.games.map((game) => (
+        {unit.games.filter((game) => game.id !== "tell-about" || (lesson.quizTellAboutPairs?.length ?? 0) > 0).map((game) => (
           <li key={game.id}>
             <Link
               href={`/unit/${unitId}/lesson/${lessonId}/game/${game.id}`}
