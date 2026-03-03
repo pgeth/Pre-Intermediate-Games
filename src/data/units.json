@@ -120,6 +120,109 @@
           "difficulty": 2
         }
       ]
+    },
+    {
+      "id": "2",
+      "unit": 2,
+      "title": "Work",
+      "titleRu": "Работа",
+      "lessons": [
+        {
+          "id": "2.1",
+          "lesson": 1,
+          "title": "The company 4 U",
+          "titleRu": "Компания для тебя",
+          "grammar": "Present Simple & Present Continuous",
+          "vocabulary": [
+            { "en": "to work for (a company)", "ru": "работать на (компанию)" },
+            { "en": "employee", "ru": "сотрудник" },
+            { "en": "employer", "ru": "работодатель" },
+            { "en": "customer", "ru": "клиент, покупатель" },
+            { "en": "salary", "ru": "зарплата" },
+            { "en": "to get a good salary", "ru": "получать хорошую зарплату" },
+            { "en": "bonus", "ru": "премия" },
+            { "en": "staff", "ru": "персонал" },
+            { "en": "task", "ru": "задача, задание" }
+          ],
+          "prompts": [
+            "Describe your perfect job.",
+            "Say about the industry.",
+            "Say why you like the industry.",
+            "Say what type of work it is."
+          ],
+          "adverbs": []
+        },
+        {
+          "id": "2.2",
+          "lesson": 2,
+          "title": "A risky business",
+          "titleRu": "Рискованный бизнес",
+          "grammar": "Adverbs of frequency",
+          "vocabulary": [
+            { "en": "sales rep", "ru": "торговый представитель" },
+            { "en": "fashion designer", "ru": "модельер" },
+            { "en": "IT consultant", "ru": "IT-консультант" },
+            { "en": "foreign correspondent", "ru": "иностранный корреспондент" },
+            { "en": "personal trainer", "ru": "персональный тренер" },
+            { "en": "rescue worker", "ru": "спасатель" },
+            { "en": "motorcycle courier", "ru": "курьер на мотоцикле" },
+            { "en": "accountant", "ru": "бухгалтер" },
+            { "en": "architect", "ru": "архитектор" },
+            { "en": "businessman/woman", "ru": "бизнесмен/бизнесвумен" },
+            { "en": "cook", "ru": "повар" },
+            { "en": "electrician", "ru": "электрик" },
+            { "en": "estate agent", "ru": "агент по недвижимости" },
+            { "en": "housewife", "ru": "домохозяйка" },
+            { "en": "lawyer", "ru": "юрист" },
+            { "en": "(PA) personal assistant", "ru": "личный помощник" },
+            { "en": "plumber", "ru": "сантехник" },
+            { "en": "receptionist", "ru": "регистратор, администратор" },
+            { "en": "sales assistant", "ru": "продавец‑консультант" },
+            { "en": "scientist", "ru": "учёный" },
+            { "en": "soldier", "ru": "солдат" },
+            { "en": "TV presenter", "ru": "телеведущий" },
+            { "en": "vet", "ru": "ветеринар" },
+            { "en": "to deal with (a problem)", "ru": "решать (проблему)" },
+            { "en": "to risk lives", "ru": "рисковать (жизнями)" },
+            { "en": "to work in a team", "ru": "работать в команде" },
+            { "en": "to work under pressure", "ru": "работать в напряжённых условиях" }
+          ],
+          "prompts": [
+            "Why you prefer this type of work.",
+            "Working conditions.",
+            "Location.",
+            "Working hours.",
+            "Skills you need."
+          ],
+          "adverbs": [
+            "never",
+            "often",
+            "sometimes",
+            "usually",
+            "rarely",
+            "always",
+            "hardly ever",
+            "once in a while",
+            "occasionally"
+          ]
+        }
+      ],
+      "games": [
+        {
+          "id": "vocab-quiz",
+          "type": "2d",
+          "titleEn": "Work vocabulary quiz",
+          "titleRu": "Викторина по теме Работа",
+          "difficulty": 1
+        },
+        {
+          "id": "risky-text",
+          "type": "2d",
+          "titleEn": "A risky business — story",
+          "titleRu": "Рискованный бизнес — текст с пропусками",
+          "difficulty": 2
+        }
+      ]
     }
   ]
 }

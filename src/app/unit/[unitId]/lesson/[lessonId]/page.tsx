@@ -37,32 +37,42 @@ export default async function LessonPage({ params }: Props) {
         <RuSpoiler className="block text-xs text-gray-500 font-normal mt-0.5">Игры</RuSpoiler>
       </h2>
       <ul className="space-y-3">
-        {unit.games.filter((game) => game.id !== "tell-about" || (lesson.quizTellAboutPairs?.length ?? 0) > 0).map((game) => (
-          <li key={game.id}>
-            <Link
-              href={`/unit/${unitId}/lesson/${lessonId}/game/${game.id}`}
-              className="block p-5 rounded-2xl border-2 border-white bg-white/90 shadow-lg hover:shadow-xl hover:scale-[1.02] hover:border-indigo-200 transition-all"
-            >
-              <div className="flex items-center justify-between gap-2">
-                <div>
-                  <span className="font-semibold text-slate-800">{game.titleEn}</span>
-                  <RuSpoiler className="block text-xs text-gray-500 mt-0.5">{game.titleRu}</RuSpoiler>
+        {unit.games
+          .filter((game) => {
+            if (game.id === "tell-about") {
+              return (lesson.quizTellAboutPairs?.length ?? 0) > 0;
+            }
+            if (game.id === "risky-text") {
+              return lesson.id === "2.2";
+            }
+            return true;
+          })
+          .map((game) => (
+            <li key={game.id}>
+              <Link
+                href={`/unit/${unitId}/lesson/${lessonId}/game/${game.id}`}
+                className="block p-5 rounded-2xl border-2 border-white bg-white/90 shadow-lg hover:shadow-xl hover:scale-[1.02] hover:border-indigo-200 transition-all"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <div>
+                    <span className="font-semibold text-slate-800">{game.titleEn}</span>
+                    <RuSpoiler className="block text-xs text-gray-500 mt-0.5">{game.titleRu}</RuSpoiler>
+                  </div>
+                  <div className="flex gap-0.5" aria-label={`Difficulty: ${game.difficulty} out of 3`}>
+                    {[1, 2, 3].map((d) => (
+                      <span
+                        key={d}
+                        className={`text-lg ${d <= game.difficulty ? "text-amber-400" : "text-slate-200"}`}
+                        aria-hidden
+                      >
+                        ★
+                      </span>
+                    ))}
+                  </div>
                 </div>
-                <div className="flex gap-0.5" aria-label={`Difficulty: ${game.difficulty} out of 3`}>
-                  {[1, 2, 3].map((d) => (
-                    <span
-                      key={d}
-                      className={`text-lg ${d <= game.difficulty ? "text-amber-400" : "text-slate-200"}`}
-                      aria-hidden
-                    >
-                      ★
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </Link>
-          </li>
-        ))}
+              </Link>
+            </li>
+          ))}
       </ul>
     </main>
   );

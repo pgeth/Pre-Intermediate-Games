@@ -3,6 +3,8 @@ import { getUnit, getLesson } from "@/lib/data";
 import { FlashcardsGame } from "@/components/games/shared/FlashcardsGame";
 import { FillTheGapGame } from "@/components/games/shared/FillTheGapGame";
 import { TellAboutQuizGame } from "@/components/games/shared/TellAboutQuizGame";
+import { VocabChoiceGame } from "@/components/games/shared/VocabChoiceGame";
+import { RiskyBusinessDragTextGame } from "@/components/games/shared/RiskyBusinessDragTextGame";
 import type { Lesson } from "@/types/units";
 
 interface Props {
@@ -13,6 +15,8 @@ const GAME_COMPONENTS: Record<string, React.ComponentType<{ lesson: Lesson; unit
   flashcards: FlashcardsGame,
   "fill-the-gap": FillTheGapGame,
   "tell-about": TellAboutQuizGame,
+  "vocab-quiz": VocabChoiceGame,
+  "risky-text": RiskyBusinessDragTextGame,
 };
 
 export default async function GamePage({ params }: Props) {
