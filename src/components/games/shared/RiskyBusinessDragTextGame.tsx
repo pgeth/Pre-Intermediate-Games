@@ -167,7 +167,7 @@ export function RiskyBusinessDragTextGame({ lesson, unitId }: Props) {
   const handleCheck = () => {
     if (!allFilled) return;
     setChecked(true);
-    const correctCount = assigned.reduce((acc, bankIndex, gapIndex) => {
+    const correctCount = assigned.reduce<number>((acc, bankIndex, gapIndex) => {
       if (bankIndex === null) return acc;
       const word = bank[bankIndex]?.label;
       return word === story.answers[gapIndex] ? acc + 1 : acc;
@@ -178,7 +178,7 @@ export function RiskyBusinessDragTextGame({ lesson, unitId }: Props) {
   };
 
   const correctCount = checked
-    ? assigned.reduce((acc, bankIndex, gapIndex) => {
+    ? assigned.reduce<number>((acc, bankIndex, gapIndex) => {
         if (bankIndex === null) return acc;
         const word = bank[bankIndex]?.label;
         return word === story.answers[gapIndex] ? acc + 1 : acc;
