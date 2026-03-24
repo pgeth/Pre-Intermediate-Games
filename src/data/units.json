@@ -223,6 +223,102 @@
           "difficulty": 2
         }
       ]
+    },
+    {
+      "id": "3",
+      "unit": 3,
+      "title": "Time out",
+      "titleRu": "Свободное время в городе",
+      "lessons": [
+        {
+          "id": "3.1",
+          "lesson": 1,
+          "title": "Free in NYC",
+          "titleRu": "Свободное время в Нью-Йорке",
+          "grammar": "Present Continuous and Going to",
+          "vocabulary": [
+            { "en": "to go to the cinema / theatre / a market / a museum / an art gallery / a bar / a club / a concert / a pub / a nightclub / the gym / a show", "ru": "пойти в кино / театр / на рынок / в музей / галерею / в бар / в клуб / на концерт / в паб / в ночной клуб / в спортзал / на шоу" },
+            { "en": "to go sightseeing / dancing / shopping", "ru": "пойти: на экскурсию / потанцевать / по магазинам" },
+            { "en": "to see a band / a comedy show / an exhibition", "ru": "посмотреть выступление группы / комедийное шоу / выставку" },
+            { "en": "to get some tickets / to catch the bus", "ru": "купить билеты / сесть на автобус" },
+            { "en": "to have dinner / an evening out", "ru": "поужинать / провести вечер" },
+            { "en": "to play board game / cards / chess / computer games", "ru": "поиграть в наст. игру / в карты / в шахматы / в компьютерные игры" },
+            { "en": "to collect coins / stamps", "ru": "собирать монеты / марки" },
+            { "en": "to walk / cycle / skate (through a park)", "ru": "прогуляться / покататься на велосипеде / на коньках (по парку)" },
+            { "en": "to hang out (with friends)", "ru": "потусоваться (с друзьями)" },
+            { "en": "to join (a club)", "ru": "вступить (в клуб)" },
+            { "en": "to surf the net", "ru": "посидеть в интернете" }
+          ],
+          "prompts": [
+            "Recommend 3 places to visit.",
+            "Say what activities to do in each place.",
+            "Say how much money a visitor needs."
+          ],
+          "adverbs": []
+        },
+        {
+          "id": "3.2",
+          "lesson": 2,
+          "title": "Relax!",
+          "titleRu": "Расслабься!",
+          "grammar": "Questions without auxiliaries",
+          "vocabulary": [
+            { "en": "shopping mall", "ru": "торговый центр" },
+            { "en": "nature trail", "ru": "природная тропа" },
+            { "en": "waterfront", "ru": "побережье" },
+            { "en": "sports field", "ru": "спортивная площадка" },
+            { "en": "countryside", "ru": "сельская местность" },
+            { "en": "concert hall", "ru": "концертный зал" },
+            { "en": "street", "ru": "улица" },
+            { "en": "indoors", "ru": "в помещении" },
+            { "en": "outdoors", "ru": "на открытом воздухе" }
+          ],
+          "prompts": [],
+          "adverbs": []
+        },
+        {
+          "id": "3.3",
+          "lesson": 3,
+          "title": "Can I take a message?",
+          "titleRu": "Могу я принять сообщение?",
+          "grammar": "Phone phrases",
+          "vocabulary": [
+            { "en": "to book (a table)", "ru": "забронировать (стол)" },
+            { "en": "to have a chat", "ru": "пообщаться" },
+            { "en": "to cancel a booking / reservation", "ru": "отменить бронирование / бронь" },
+            { "en": "to arrange (to meet friends)", "ru": "договориться (встретиться с друзьями)" },
+            { "en": "to check (train times)", "ru": "проверить (расписание поездов)" },
+            { "en": "to talk business", "ru": "поговорить о делах" },
+            { "en": "to change (a ticket)", "ru": "поменять (билет)" },
+            { "en": "Hello, this is ... / it’s ...", "ru": "Здравствуйте, это ... / это ..." },
+            { "en": "Can I speak to ...?", "ru": "Могу я поговорить с ...?" },
+            { "en": "Can I leave / take a message?", "ru": "Могу ли я оставить / принять сообщение?" },
+            { "en": "See you soon.", "ru": "Скоро увидимся." },
+            { "en": "Who’s calling?", "ru": "Кто звонит?" },
+            { "en": "I’m afraid she is not here at the moment.", "ru": "Боюсь, её сейчас нет." },
+            { "en": "I’ll ask her to call you back.", "ru": "Я попрошу её перезвонить вам." },
+            { "en": "Thanks for calling.", "ru": "Спасибо за звонок." }
+          ],
+          "prompts": [],
+          "adverbs": []
+        }
+      ],
+      "games": [
+        {
+          "id": "vocab-quiz",
+          "type": "2d",
+          "titleEn": "Unit 3 vocabulary quiz",
+          "titleRu": "Викторина по лексике юнита 3",
+          "difficulty": 1
+        },
+        {
+          "id": "flashcards",
+          "type": "2d",
+          "titleEn": "Unit 3 flashcards",
+          "titleRu": "Карточки юнита 3",
+          "difficulty": 1
+        }
+      ]
     }
   ]
 }

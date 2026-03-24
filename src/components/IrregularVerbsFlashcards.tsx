@@ -4,13 +4,6 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import type { IrregularVerb } from "@/data/irregularVerbsTable1";
 import { irregularVerbsTable1 } from "@/data/irregularVerbsTable1";
 
-type CollectionId = "table1" | "table2";
-
-const COLLECTIONS: { id: CollectionId; label: string; verbs: IrregularVerb[] }[] = [
-  { id: "table1", label: "Table One", verbs: irregularVerbsTable1 },
-  { id: "table2", label: "Table Two", verbs: [] },
-];
-
 function shuffleArray<T>(arr: T[]): T[] {
   const out = [...arr];
   for (let i = out.length - 1; i > 0; i--) {
@@ -21,7 +14,6 @@ function shuffleArray<T>(arr: T[]): T[] {
 }
 
 export function IrregularVerbsFlashcards() {
-  const [collectionId, setCollectionId] = useState<CollectionId>("table1");
   const [index, setIndex] = useState(0);
   const [showBack, setShowBack] = useState(false);
   const [shuffledDeck, setShuffledDeck] = useState<IrregularVerb[] | null>(() => shuffleArray(irregularVerbsTable1));
@@ -40,19 +32,11 @@ export function IrregularVerbsFlashcards() {
     return () => window.speechSynthesis?.removeEventListener("voiceschanged", load);
   }, []);
 
-  const collection = COLLECTIONS.find((c) => c.id === collectionId)!;
-  const list = collection.verbs.length ? collection.verbs : [];
+  const list = irregularVerbsTable1;
 
   const displayList = shuffledDeck && shuffledDeck.length === list.length
     ? shuffledDeck
     : list;
-
-  useEffect(() => {
-    const coll = COLLECTIONS.find((c) => c.id === collectionId)!;
-    const nextList = coll.verbs.length ? coll.verbs : [];
-    setShuffledDeck(shuffleArray(nextList));
-    setIndex(0);
-  }, [collectionId]);
 
   useEffect(() => () => {
     if (pendingIndexRef.current) clearTimeout(pendingIndexRef.current);
@@ -165,37 +149,6 @@ export function IrregularVerbsFlashcards() {
     <section className="mb-10">
       <div className="bg-white/80 backdrop-blur rounded-2xl border border-white/50 shadow-lg overflow-hidden">
         <div className="p-4 space-y-4">
-          {/* Collection selector */}
-          <div className="flex flex-wrap gap-2">
-            {COLLECTIONS.map((c) => (
-              <button
-                key={c.id}
-                type="button"
-                onClick={() => {
-                  setCollectionId(c.id);
-                  setIndex(0);
-                  setShowBack(false);
-                }}
-                disabled={c.verbs.length === 0}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition ${
-                  collectionId === c.id
-                    ? "bg-emerald-500 text-white shadow-sm"
-                    : c.verbs.length
-                      ? "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                      : "bg-slate-50 text-slate-400 cursor-not-allowed"
-                }`}
-              >
-                {c.label}
-              </button>
-            ))}
-          </div>
-
-          {!hasCards && (
-            <p className="text-sm text-slate-500 py-4">
-              This collection is empty. / В этой коллекции пока нет глаголов.
-            </p>
-          )}
-
           {hasCards && (
             <>
               <div className="flex items-center justify-between text-sm text-slate-600 flex-wrap gap-2">

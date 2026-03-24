@@ -121,7 +121,7 @@ export function VocabChoiceGame({ lesson, unitId }: Props) {
         </Link>
         <div className="bg-white/90 backdrop-blur rounded-2xl shadow-lg border border-white/50 p-6 mb-6">
           <LabelWithRu
-            en="Work vocabulary quiz"
+            en="Vocabulary quiz"
             ru="Викторина по лексике"
             as="h1"
             className="text-2xl font-bold mb-2 text-slate-800"
